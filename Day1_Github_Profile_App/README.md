@@ -2,7 +2,7 @@
 
 > A sleek, dark-themed GitHub profile search application built with **vanilla HTML, CSS, and JavaScript**. No frameworks. No dependencies. Just a fast, lightweight interface powered by the **GitHub REST API**.
 
-![App Screenshot](https://cdn.corenexis.com/f/rImVaxasPXx.jpg)
+![App Screenshot](https://cdn.corenexis.com/f/8f4mLUYc9p4.jpeg)
 
 ---
 
