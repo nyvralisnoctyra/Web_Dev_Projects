@@ -1,0 +1,531 @@
+/* ==========================================================================
+   GitHub Profiles — custom.css
+   Theme: Black + White + Red  ·  Animated background · Custom cursor
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. DESIGN TOKENS
+   -------------------------------------------------------------------------- */
+:root {
+  /* Monochrome + red palette */
+  --black:        #000000;
+  --near-black:   #0a0a0a;
+  --surface:      #111111;
+  --surface-2:    #1a1a1a;
+  --surface-3:    #242424;
+  --border:       #2a2a2a;
+  --border-hi:    #3d3d3d;
+
+  --white:        #ffffff;
+  --text:         #f5f5f5;
+  --text-muted:   #9a9a9a;
+  --text-dim:     #5c5c5c;
+
+  --red:          #ff2b3d;
+  --red-bright:   #ff4d5e;
+  --red-dark:     #c8102e;
+  --red-glow:     rgba(255, 43, 61, 0.35);
+  --red-soft:     rgba(255, 43, 61, 0.08);
+
+  /* Type */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+               Helvetica, Arial, sans-serif;
+  --fs-sm:   0.875rem;
+  --fs-base: 1rem;
+  --fs-lg:   1.25rem;
+  --fs-xl:   1.75rem;
+
+  /* Space */
+  --s1: 0.25rem;
+  --s2: 0.5rem;
+  --s3: 1rem;
+  --s4: 1.5rem;
+  --s5: 2rem;
+
+  /* Radius / shadow */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.7);
+  --shadow-red: 0 0 24px var(--red-glow);
+
+  /* Motion */
+  --t-fast: 150ms ease;
+  --t-base: 250ms ease;
+  --t-slow: 600ms cubic-bezier(.2,.7,.2,1);
+}
+
+/* --------------------------------------------------------------------------
+   2. RESET / BASE
+   -------------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; min-height: 100vh; }
+
+body {
+  background: var(--black);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--s5) var(--s3);
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: none;              /* hide OS cursor – custom one takes over */
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+img { max-width: 100%; display: block; }
+ul  { list-style: none; margin: 0; padding: 0; }
+a   { color: var(--red); text-decoration: none; transition: color var(--t-fast); }
+a:hover { color: var(--red-bright); }
+
+/* --------------------------------------------------------------------------
+   3. ANIMATED BACKGROUND
+   -------------------------------------------------------------------------- */
+
+/* 3.1 – Moving grid (CSS-only, GPU-friendly) */
+.bg-grid {
+  position: fixed;
+  inset: -50%;
+  z-index: -3;
+  background-image:
+    linear-gradient(rgba(255, 43, 61, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 43, 61, 0.07) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: gridDrift 30s linear infinite;
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+}
+
+@keyframes gridDrift {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(60px, 60px, 0); }
+}
+
+/* 3.2 – Floating red glows (two blobs, opposite drift) */
+.bg-glow {
+  position: fixed;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  filter: blur(140px);
+  opacity: 0.35;
+  z-index: -2;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.bg-glow--1 {
+  background: radial-gradient(circle, var(--red), transparent 70%);
+  top: -180px; left: -180px;
+  animation: floatA 18s ease-in-out infinite;
+}
+
+.bg-glow--2 {
+  background: radial-gradient(circle, var(--red-dark), transparent 70%);
+  bottom: -200px; right: -200px;
+  animation: floatB 22s ease-in-out infinite;
+}
+
+@keyframes floatA {
+  0%, 100% { transform: translate(0, 0)     scale(1); }
+  50%      { transform: translate(120px, 80px) scale(1.15); }
+}
+
+@keyframes floatB {
+  0%, 100% { transform: translate(0, 0)       scale(1.1); }
+  50%      { transform: translate(-100px, -60px) scale(0.95); }
+}
+
+/* --------------------------------------------------------------------------
+   4. CUSTOM ANIMATED CURSOR
+   -------------------------------------------------------------------------- */
+.cursor,
+.cursor-dot {
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+  mix-blend-mode: difference; /* inverts on white — very cool on black+red */
+}
+
+.cursor {
+  width: 34px; height: 34px;
+  border: 2px solid var(--red);
+  transition: width .25s ease, height .25s ease,
+              background-color .25s ease, border-color .25s ease;
+}
+
+.cursor-dot {
+  width: 6px; height: 6px;
+  background: var(--red);
+}
+
+/* Hover state – grows on interactive elements */
+.cursor.is-hover {
+  width: 58px; height: 58px;
+  background: var(--red-glow);
+  border-color: var(--red-bright);
+}
+
+/* Click state – quick pulse */
+.cursor.is-click {
+  width: 22px; height: 22px;
+  background: var(--red);
+}
+
+/* Hide custom cursor on touch devices */
+@media (hover: none) {
+  .cursor, .cursor-dot { display: none; }
+  body { cursor: auto; }
+}
+
+/* --------------------------------------------------------------------------
+   5. HERO HEADER
+   -------------------------------------------------------------------------- */
+.hero {
+  width: 100%;
+  max-width: 720px;
+  text-align: center;
+  margin-bottom: var(--s4);
+  animation: fadeUp var(--t-slow) both;
+}
+
+.hero__title {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--white);
+}
+
+.hero__accent {
+  color: var(--red);
+  text-shadow: 0 0 24px var(--red-glow);
+}
+
+.hero__sub {
+  margin: var(--s2) 0 0;
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------------------
+   6. SEARCH FORM
+   -------------------------------------------------------------------------- */
+#form {
+  width: 100%;
+  max-width: 720px;
+  margin-bottom: var(--s5);
+  animation: fadeUp var(--t-slow) 80ms both;
+}
+
+#search {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  font-size: var(--fs-base);
+  font-family: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-md);
+  transition: border-color var(--t-fast), box-shadow var(--t-fast),
+              background-color var(--t-fast), transform var(--t-fast);
+}
+
+#search::placeholder { color: var(--text-dim); letter-spacing: .02em; }
+
+#search:focus {
+  outline: none;
+  background: var(--surface-2);
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px var(--red-soft), var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+/* --------------------------------------------------------------------------
+   7. MAIN
+   -------------------------------------------------------------------------- */
+#main {
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+  min-height: 200px;
+}
+
+/* --------------------------------------------------------------------------
+   8. PROFILE CARD
+   -------------------------------------------------------------------------- */
+.card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--s4);
+  padding: var(--s4);
+  background: linear-gradient(145deg, var(--surface), var(--near-black));
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--t-base), box-shadow var(--t-base),
+              border-color var(--t-base);
+  animation: fadeUp var(--t-slow) both;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Red scanline that sweeps across the card on mount */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255, 43, 61, 0.12) 50%,
+    transparent 100%);
+  transform: translateX(-100%);
+  animation: scan 1.2s ease-out 0.1s 1;
+  pointer-events: none;
+}
+
+@keyframes scan {
+  to { transform: translateX(100%); }
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--red);
+  box-shadow: var(--shadow-lg), 0 0 0 1px var(--red), var(--shadow-red);
+}
+
+.avatar {
+  width: 128px; height: 128px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--border-hi);
+  background: var(--surface-2);
+  transition: border-color var(--t-base), transform var(--t-base), box-shadow var(--t-base);
+}
+
+.card:hover .avatar {
+  border-color: var(--red);
+  transform: scale(1.04);
+  box-shadow: 0 0 24px var(--red-glow);
+}
+
+.user-info h2 {
+  margin: 0 0 var(--s1);
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--white);
+}
+
+.user-info > p {
+  margin: 0 0 var(--s3);
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  max-width: 55ch;
+}
+
+.info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s4);
+  margin-bottom: var(--s3);
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+
+.info li { display: flex; align-items: baseline; gap: var(--s1); }
+
+.info li strong {
+  font-size: var(--fs-base);
+  font-weight: 800;
+  color: var(--red);
+}
+
+/* --------------------------------------------------------------------------
+   9. REPOS
+   -------------------------------------------------------------------------- */
+#repos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+}
+
+.repo {
+  display: inline-block;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  text-decoration: none;
+  transition: all var(--t-fast);
+}
+
+.repo:hover, .repo:focus-visible {
+  background: var(--red);
+  border-color: var(--red);
+  color: var(--white);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px var(--red-glow);
+  outline: none;
+}
+
+/* --------------------------------------------------------------------------
+   10. LOADING ANIMATION  (spinner + skeleton shimmer)
+   -------------------------------------------------------------------------- */
+
+/* Full-panel loader */
+.loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s3);
+  padding: var(--s5) var(--s3);
+  animation: fadeUp var(--t-slow) both;
+}
+
+/* Rotating double ring */
+.loader__ring {
+  width: 68px; height: 68px;
+  border-radius: 50%;
+  border: 3px solid var(--surface-3);
+  border-top-color: var(--red);
+  border-right-color: var(--red-bright);
+  animation: spin 0.9s linear infinite;
+  box-shadow: 0 0 22px var(--red-glow) inset, 0 0 22px var(--red-glow);
+  position: relative;
+}
+
+.loader__ring::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-bottom-color: var(--red);
+  animation: spin 1.4s linear infinite reverse;
+}
+
+.loader__text {
+  font-size: var(--fs-sm);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.loader__text::after {
+  content: "";
+  animation: dots 1.4s steps(4, end) infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes dots {
+  0%   { content: "";    }
+  25%  { content: ".";   }
+  50%  { content: "..";  }
+  75%  { content: "..."; }
+}
+
+/* Skeleton shimmer (used inside card placeholders) */
+.loading {
+  position: relative;
+  overflow: hidden;
+  color: transparent;
+  background: var(--surface-2);
+  border-radius: var(--r-sm);
+}
+
+.loading::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 43, 61, 0.14),
+    transparent
+  );
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(100%); }
+}
+
+/* --------------------------------------------------------------------------
+   11. ERROR
+   -------------------------------------------------------------------------- */
+.error {
+  padding: var(--s4);
+  text-align: center;
+  background: var(--red-soft);
+  border: 1px solid var(--red);
+  border-radius: var(--r-md);
+  color: var(--red-bright);
+  font-weight: 600;
+  animation: shake 0.4s ease, fadeUp var(--t-slow) both;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-6px); }
+  75%      { transform: translateX(6px); }
+}
+
+/* --------------------------------------------------------------------------
+   12. GLOBAL ANIMATIONS
+   -------------------------------------------------------------------------- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* --------------------------------------------------------------------------
+   13. RESPONSIVE
+   -------------------------------------------------------------------------- */
+@media (max-width: 600px) {
+  body { padding: var(--s4) var(--s2); }
+
+  .card {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .info, #repos { justify-content: center; }
+
+  .avatar { width: 100px; height: 100px; }
+
+  .user-info h2 { font-size: var(--fs-lg); }
+}
+
+/* Reduced motion – kill decorative animations */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .bg-grid, .bg-glow { animation: none; }
+}

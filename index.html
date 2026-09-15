@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Github Profiles</title>
+    <link rel="stylesheet" href="custom.css" />
+    <script src="app.js" defer></script>
+</head>
+
+<body>
+    <!-- Animated background layers -->
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow--1" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow--2" aria-hidden="true"></div>
+
+    <!-- Custom animated cursor -->
+    <div class="cursor" aria-hidden="true"></div>
+    <div class="cursor-dot" aria-hidden="true"></div>
+
+    <header class="hero">
+        <h1 class="hero__title">
+            <span class="hero__accent">Git</span>Hub Profiles
+        </h1>
+        <p class="hero__sub">Search any developer on GitHub</p>
+    </header>
+
+    <form id="form" autocomplete="off">
+        <input type="text" id="search" autofocus placeholder="Search a Github User Here…" spellcheck="false" />
+    </form>
+
+    <main id="main" aria-live="polite"></main>
+</body>
+
+</html>
